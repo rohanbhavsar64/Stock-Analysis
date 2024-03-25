@@ -80,7 +80,7 @@ elif h=='Analysis':
             fig.update_yaxes(showgrid=False)
             st.write(fig)
 
-elif h=='information' :
+elif h=='Information' :
     st.subheader('Description')
     st.write(v)
 else:
