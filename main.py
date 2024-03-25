@@ -5,7 +5,6 @@ import numpy as np
 from datetime import date
 import plotly.express as px
 import streamlit as st
-import time
 st.title("Stock Analysis")
 ticker='TATAMOTORS'
 exchange='NSE'
