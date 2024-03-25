@@ -5,5 +5,5 @@ requests
 bs4
 datetime
 time
-nselib
 plotly
+yfinance

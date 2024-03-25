@@ -3,69 +3,129 @@ import requests
 from bs4 import BeautifulSoup
 import numpy as np
 from datetime import date
+import plotly.express as px
 import streamlit as st
 import time
 st.title("Stock Analysis")
 ticker='TATAMOTORS'
 exchange='NSE'
 #exchange=st.selectbox('Exchage',u)
-data=pd.read_csv('Com.csv')
+data=pd.read_csv('company.csv')
 #st.write(data)
-ticker=st.selectbox("Company",data['Symbol'].unique())
-url=f'https://www.google.com/finance/quote/{ticker}:{exchange}'
-df=0
-from nselib import derivatives
-h=0
-for i in range(3):
-    response=requests.get(url)
-    soup=BeautifulSoup(response.text,'html.parser')
-    class1='YMlKec fxKbKc'
-    price=float(soup.find(class_=class1).text.strip()[1:].replace(",",""))
-    l=np.array([time.ctime()])
-    df=price
-    time.sleep(1)
-st.subheader('Price'+':'+str(df))
-st.write(h)
-response=requests.get(url)
-soup=BeautifulSoup(response.text,'html.parser')
-pc=soup.find(class_="P6K39c").text.strip()[1:].replace(",","")
-#info=soup.find_all(id="i14")
-DAYRANGE=soup.find_all('div', {'class': 'P6K39c'})[1].text
-YEARRANGE=soup.find_all('div', {'class': 'P6K39c'})[2].text
-MARKETCAP=soup.find_all('div', {'class': 'P6K39c'})[3].text
-pe=soup.find_all('div', {'class': 'P6K39c'})[4].text
-DIVIDENDYIELD=soup.find_all('div', {'class': 'P6K39c'})[5].text
-PRIMARYEXCHANGE=soup.find_all('div', {'class': 'P6K39c'})[6].text
-data=pd.DataFrame({"DAY RANGE":[DAYRANGE],"Previous Close":[pc],"YEAR RANGE":[YEARRANGE],"MARKET CAP":[MARKETCAP],"P/E RATIO":[pe],"DIVIDEND YIELD":[DIVIDENDYIELD],"PRIMARY EXCHANGE":[PRIMARYEXCHANGE]})
-col1,col2=st.columns(2)
-with col1:
-    st.subheader("Stock Price V/S Time")
-    i=['1D','1W','1M','1Y']
-    f=st.radio('Time of Analysis',i,horizontal=True)
-    df=derivatives.future_price_volume_data(ticker,'FUTSTK',period=f)
-    df['Price']=df['UNDERLYING_VALUE']
-    df['Date']=df['TIMESTAMP']
-    df=df.drop(columns=['UNDERLYING_VALUE','TIMESTAMP'])
-    import plotly.express as px
-    l=px.line(df,df['Date'],df['Price'],color_discrete_sequence=["#355E3B"])
-    l.update_layout(width=400,height=300,margin=dict(
-       r=100,
-       t=0
-    ))
-    st.write(l)
+fd=pd.read_csv('symbol.csv')
+Fd=pd.read_csv('Symbol.csv')
+f=fd['Symbol'].unique()
+#Mt(15px) Lh(1.6)
+ticker=st.selectbox("Company",f)
+url=f"https://finance.yahoo.com/quote/{ticker}?.tsrc=fin-srch"
+df=pd.DataFrame()
+#<fin-streamer class="Fw(500) Pstart(8px) Fz(24px)" data-symbol="INFY" data-test="qsp-price-change" data-field="regularMarketChange" data-trend="txt" data-pricehint="2" value="-0.6700001" active=""><span class="e3b14781 ee3e99dd dde7f18a"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">-0.64</font></font></span></fin-streamer>
+headers={'User-Agent':'Mo BeautifulSoupzilla/5.0 (Windows NT 6.3; Win 64 ; x64) Apple WeKit /537.36(KHTML , like Gecko) Chrome/80.0.3987.162 Safari/537.36'}
+r=requests.get(url,headers=headers)
+web=BeautifulSoup(r.text,'html')
+st.write(web.find(class_='D(ib) Fz(18px)').text)
 
-with col2:
-    st.subheader("Stock INFO")
-    d = st.table(data.transpose())
-st.subheader("About")
-st.write(soup.find(class_="bLLb2d").text)
-Revenue=soup.find(class_="QXDnM").text
-Operatingexpense=soup.find_all(class_="QXDnM")[1].text
-NetIncome=soup.find_all(class_="QXDnM")[2].text
-NetProfitMargin=soup.find_all(class_="QXDnM")[3].text
-Earningspershare=soup.find_all(class_="QXDnM")[4].text
-EBITDA=soup.find_all(class_="QXDnM")[5].text
-Effectivetaxrate=soup.find_all(class_="QXDnM")[6].text
-df1=pd.DataFrame({'Revenue':[Revenue],'Operating expense':[Operatingexpense],'Net Income':[NetIncome],'Net Profit Margin':[NetProfitMargin],'Earnings per share':[Earningspershare],'EBITDA':[EBITDA],"Effective tax rate":[Effectivetaxrate]})
-st.subheader("Income Status")
-st.table(df1.transpose())
+#<div class="D(ib) Mt(-5px) Maw(38%)--tab768 Maw(38%) Mend(10px) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)"><div class="D(ib) "><h1 class="D(ib) Fz(18px)">Infosys Limited (INFY)</h1></div><div class="C($tertiaryColor) Fz(12px)"><span>NYSE - Nasdaq Real Time Price. Currency in USD</span></div></div>
+c=web.find(class_='Fw(b) Fz(36px) Mb(-4px) D(ib)').text
+st.subheader('Current Price : '+c)
+a=web.find_all(class_='Fw(500) Pstart(8px) Fz(24px)')[0].text
+b=web.find_all(class_='Fw(500) Pstart(8px) Fz(24px)')[1].text
+
+url1=f'https://finance.yahoo.com/quote/{ticker}/profile'
+res=requests.get(url1,headers=headers)
+w=BeautifulSoup(res.text,'html')
+v=w.find(class_='Mt(15px) Lh(1.6)').text
+s=a+" "+b
+st.write(s)
+import yfinance as yf
+
+# Get the data for the stock AAPL
+j=['Analysis','Historical Data','Information','Summary']
+h=st.sidebar.radio('Option',j)
+if h=='Historical Data':
+    l=['1w','1mo','1y']
+    i=st.radio('Period',l,horizontal=True)
+    df = yf.download(ticker,period=i)
+    st.write(df)
+elif h=='Analysis':
+    st.subheader('Line Chart')
+    l = ['1w','1mo', '1y']
+    i = st.radio('Period', l,horizontal=True)
+    df = yf.download(ticker, period=i)
+    q=['Area','Line','Bar']
+    g=st.radio('Chart- Type',q,horizontal=True)
+    if g=='Area':
+        if df['Close'][-1]<df['Close'][0]:
+            fig=px.area(df,x=df.index,y='Close',color_discrete_sequence=["#9E4033"])
+            fig.update_yaxes(showgrid=False)
+            st.write(fig)
+        else:
+            fig = px.area(df, x=df.index,y='Close', color_discrete_sequence=["#4A7230"])
+            fig.update_yaxes(showgrid=False)
+            st.write(fig)
+    elif g=='Line':
+        if df['Close'][-1] < df['Close'][0]:
+            fig = px.line(df, x=df.index, y='Close', color_discrete_sequence=["#9E4033"])
+            fig.update_yaxes(showgrid=False)
+            st.write(fig)
+        else:
+            fig = px.line(df, x=df.index, y='Close', color_discrete_sequence=["#4A7230"])
+            fig.update_yaxes(showgrid=False)
+            st.write(fig)
+    else:
+        if df['Close'][-1] < df['Close'][0]:
+            fig = px.bar(df, x=df.index, y='Close', color_discrete_sequence=["#9E4033"])
+            fig.update_yaxes(showgrid=False)
+            st.write(fig)
+        else:
+            fig = px.bar(df, x=df.index, y='Close', color_discrete_sequence=["#4A7230"])
+            fig.update_yaxes(showgrid=False)
+            st.write(fig)
+
+elif h=='information' :
+    st.subheader('Description')
+    st.write(v)
+else:
+    st.subheader('Summary')
+    d1=web.find_all(class_='C($primaryColor) W(51%)')[0].text
+    d2=web.find_all(class_='C($primaryColor) W(51%)')[1].text
+    d3=web.find_all(class_='C($primaryColor) W(51%)')[2].text
+    d4=web.find_all(class_='C($primaryColor) W(51%)')[3].text
+    d5=web.find_all(class_='C($primaryColor) W(51%)')[4].text
+    d6=web.find_all(class_='C($primaryColor) W(51%)')[7].text
+    d7=web.find_all(class_='C($primaryColor) W(51%)')[6].text
+    c1=web.find_all(class_="Ta(end) Fw(600) Lh(14px)")[0].text
+    c2=web.find_all(class_="Ta(end) Fw(600) Lh(14px)")[1].text
+    c3=web.find_all(class_="Ta(end) Fw(600) Lh(14px)")[2].text
+    c4=web.find_all(class_="Ta(end) Fw(600) Lh(14px)")[3].text
+    c5=web.find_all(class_="Ta(end) Fw(600) Lh(14px)")[4].text
+    c6=web.find_all(class_="Ta(end) Fw(600) Lh(14px)")[5].text
+    c7=web.find_all(class_="Ta(end) Fw(600) Lh(14px)")[6].text
+    data2 = [[d1,c1], [d2,c2], [d3,c3],[d4,c4],[d5,c5],[d6,c6],[d7,c7]]
+    data1 = pd.DataFrame(data2,columns=['Terms','Values'])
+    table=st.table(data1)
+    d10 = web.find_all(class_='C($primaryColor) W(51%)')[7].text
+    d20 = web.find_all(class_='C($primaryColor) W(51%)')[8].text
+    d30= web.find_all(class_='C($primaryColor) W(51%)')[9].text
+    d40= web.find_all(class_='C($primaryColor) W(51%)')[10].text
+    d50= web.find_all(class_='C($primaryColor) W(51%)')[11].text
+    d60= web.find_all(class_='C($primaryColor) W(51%)')[12].text
+    d70= web.find_all(class_='C($primaryColor) W(51%)')[13].text
+    c10= web.find_all(class_="Ta(end) Fw(600) Lh(14px)")[7].text
+    c20= web.find_all(class_="Ta(end) Fw(600) Lh(14px)")[8].text
+    c30= web.find_all(class_="Ta(end) Fw(600) Lh(14px)")[9].text
+    c40= web.find_all(class_="Ta(end) Fw(600) Lh(14px)")[10].text
+    c50= web.find_all(class_="Ta(end) Fw(600) Lh(14px)")[11].text
+    c60= web.find_all(class_="Ta(end) Fw(600) Lh(14px)")[12].text
+    c70= web.find_all(class_="Ta(end) Fw(600) Lh(14px)")[13].text
+    data20 = [[d10, c10], [d20, c20], [d30, c30], [d40, c40], [d50, c50], [d60, c60], [d70, c70]]
+    data10 = pd.DataFrame(data20, columns=['Terms', 'Values'])
+    table = st.table(data10)
+    op=web.find(class_='M(0) P(0) Fz(s) D(f)  Ai(c) Jc(sb)').text
+    st.write(op)
+
+
+
+#<div class="D(ib) W(1/2) Bxz(bb) Pend(12px) Va(t) ie-7_D(i) smartphone_D(b) smartphone_W(100%) smartphone_Pend(0px) smartphone_BdY smartphone_Bdc($seperatorColor)" data-test="left-summary-table"><table class="W(100%)"><tbody><tr class="Bxz(bb) Bdbw(1px) Bdbs(s) Bdc($seperatorColor) H(36px) "><td class="C($primaryColor) W(51%)"><span>Previous Close</span></td><td class="Ta(end) Fw(600) Lh(14px)" data-test="PREV_CLOSE-value">107.87</td></tr><tr class="Bxz(bb) Bdbw(1px) Bdbs(s) Bdc($seperatorColor) H(36px) "><td class="C($primaryColor) W(51%)"><span>Open</span></td><td class="Ta(end) Fw(600) Lh(14px)" data-test="OPEN-value">107.60</td></tr><tr class="Bxz(bb) Bdbw(1px) Bdbs(s) Bdc($seperatorColor) H(36px) "><td class="C($primaryColor) W(51%)"><span>Bid</span></td><td class="Ta(end) Fw(600) Lh(14px)" data-test="BID-value">0.00 x 900</td></tr><tr class="Bxz(bb) Bdbw(1px) Bdbs(s) Bdc($seperatorColor) H(36px) "><td class="C($primaryColor) W(51%)"><span>Ask</span></td><td class="Ta(end) Fw(600) Lh(14px)" data-test="ASK-value">106.08 x 800</td></tr><tr class="Bxz(bb) Bdbw(1px) Bdbs(s) Bdc($seperatorColor) H(36px) "><td class="C($primaryColor) W(51%)"><span>Day's Range</span></td><td class="Ta(end) Fw(600) Lh(14px)" data-test="DAYS_RANGE-value">106.75 - 108.12</td></tr><tr class="Bxz(bb) Bdbw(1px) Bdbs(s) Bdc($seperatorColor) H(36px) "><td class="C($primaryColor) W(51%)"><span>52 Week Range</span></td><td class="Ta(end) Fw(600) Lh(14px)" data-test="FIFTY_TWO_WK_RANGE-value">85.35 - 113.14</td></tr><tr class="Bxz(bb) Bdbw(1px) Bdbs(s) Bdc($seperatorColor) H(36px) "><td class="C($primaryColor) W(51%)"><span>Volume</span></td><td class="Ta(end) Fw(600) Lh(14px)" data-test="TD_VOLUME-value"><fin-streamer data-symbol="MMM" data-field="regularMarketVolume" data-trend="none" data-pricehint="2" data-dfield="longFmt" value="4,449,245" active="">4,449,245</fin-streamer></td></tr><tr class="Bxz(bb) Bdbw(1px) Bdbs(s) Bdc($seperatorColor) H(36px) Bdbw(0)! "><td class="C($primaryColor) W(51%)"><span>Avg. Volume</span></td><td class="Ta(end) Fw(600) Lh(14px)" data-test="AVERAGE_VOLUME_3MONTH-value">4,952,249</td></tr></tbody></table></div>
+##72C73C
+#l-align: inherit;">-0.55</font></font></span></fin-streamer> <fin-streamer class="Fw(500) Pstart(8px) Fz(24px)" data-symbol="INFY" data-field="regularMarketChangePercent" data-trend="txt" data-pricehint="2" data-template="({fmt})" value="-0.03539356" active=""><span class="e3b14781 ee3e99dd f5a023e1"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">(-2.88%)</font></font></span></fin-streamer><fin-streamer class="D(n)" data-symbol="INFY" changeev="regularTimeChange" data-field="regularMarketTime" data-trend="none" value="" active="true"></fin-streamer><fin-streamer class="D(n)" data-symbol="INFY" changeev="marketState" data-field="marketState" data-trend="none" value="" active="true"></fin-streamer><div id="quote-market-notice" class="C($tertiaryColor) D(b) Fz(12px) Fw(n) Mstart(0)--mobpsm Mt(6px)--mobpsm Whs(n)"><span>As of  09:41AM EDT. Market open.</span></div></div></div><div class="Pos(r) Z(1) D(ib) Mstart(30px) Va(t) uba-container"><div id="defaultTRADENOW-sizer" class="Ta(c) Pos-r Z-0 Pos(r) Z(a) sdaLite_D(n)" data-google-query-id="CLmUxPS9hYUDFUWjrAIdTtgCYw" style="display: none;"><div id="defaultTRADENOW-wrapper" class=""><div id="defaultdestTRADENOW" class="" style="height:55px;width:280px;"> </div></div></div></div></div>
