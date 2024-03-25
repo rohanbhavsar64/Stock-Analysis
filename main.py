@@ -9,7 +9,6 @@ st.title("Stock Analysis")
 ticker='TATAMOTORS'
 exchange='NSE'
 #exchange=st.selectbox('Exchage',u)
-data=pd.read_csv('company.csv')
 #st.write(data)
 fd=pd.read_csv('symbol.csv')
 Fd=pd.read_csv('Symbol.csv')
