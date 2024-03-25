@@ -10,8 +10,8 @@ ticker='TATAMOTORS'
 exchange='NSE'
 #exchange=st.selectbox('Exchage',u)
 #st.write(data)
-fd=pd.read_csv('symbol.csv')
-Fd=pd.read_csv('Symbol.csv')
+fd=pd.read_csv('constituents.csv')
+Fd=pd.read_csv('NSE Symbols.csv')
 f=fd['Symbol'].unique()
 #Mt(15px) Lh(1.6)
 ticker=st.selectbox("Company",f)
