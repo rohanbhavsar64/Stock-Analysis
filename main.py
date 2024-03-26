@@ -23,21 +23,9 @@ c=web.find(class_='Fw(b) Fz(36px) Mb(-4px) D(ib)').text
 st.subheader('Current Price : '+c+' $')
 a=web.find_all(class_='Fw(500) Pstart(8px) Fz(24px)')[0].text
 b=web.find_all(class_='Fw(500) Pstart(8px) Fz(24px)')[1].text
-url3=f'https://finance.yahoo.com/quote/{ticker}/analysis'
-r2=requests.get(url3,headers=headers)
-w2=BeautifulSoup(r2.text,'html')
-url1=f'https://finance.yahoo.com/quote/{ticker}/profile'
-res=requests.get(url1,headers=headers)
-w=BeautifulSoup(res.text,'html')
-v=w.find(class_='Mt(15px) Lh(1.6)').text
-u=w.find_all(class_='Pt(10px) smartphone_Pt(20px) Lh(1.7)')[0].text
-z=w.find_all(class_='D(ib) Va(t)')[0].text
 s=a+" "+b
 st.write(s)
 import yfinance as yf
-url2=f'https://finance.yahoo.com/quote/{ticker}/financials'
-r1=requests.get(url2,headers=headers)
-w1=BeautifulSoup(r1.text,'html')
 # Get the data for the stock AAPL
 j=['Analysis','Historical Data','Profile','Statistics']
 h=st.radio('Field',j,horizontal=True)
@@ -83,6 +71,9 @@ elif h=='Analysis':
             fig = px.bar(df, x=df.index, y='Close', color_discrete_sequence=["#4A7230"],title='Closing Price  vs Date')
             fig.update_yaxes(showgrid=False)
             st.write(fig)
+    url3 = f'https://finance.yahoo.com/quote/{ticker}/analysis'
+    r2 = requests.get(url3, headers=headers)
+    w2 = BeautifulSoup(r2.text, 'html')
     a1=w2.find_all(class_='Fw(400) W(20%) Fz(xs) C($tertiaryColor) Ta(end)')[8].text
     a2=w2.find_all(class_='Fw(400) W(20%) Fz(xs) C($tertiaryColor) Ta(end)')[9].text
     a3=w2.find_all(class_='Fw(400) W(20%) Fz(xs) C($tertiaryColor) Ta(end)')[10].text
@@ -109,6 +100,12 @@ elif h=='Profile':
     #st.subheader(ticker)
     #st.write(u)
    # st.write(z)
+    url1 = f'https://finance.yahoo.com/quote/{ticker}/profile'
+    res = requests.get(url1, headers=headers)
+    w = BeautifulSoup(res.text, 'html')
+    v = w.find(class_='Mt(15px) Lh(1.6)').text
+    u = w.find_all(class_='Pt(10px) smartphone_Pt(20px) Lh(1.7)')[0].text
+    z = w.find_all(class_='D(ib) Va(t)')[0].text
     st.subheader('Description')
     st.write(v)
 else:
@@ -168,6 +165,9 @@ else:
         data20 = [[d20, c20], [d30, c30], [d40, c40], [d50, c50], [d60, c60], [d70, c70]]
         data10 = pd.DataFrame(data20, columns=['Terms', 'Values'])
         table = st.table(data10)
+    url2 = f'https://finance.yahoo.com/quote/{ticker}/financials'
+    r1 = requests.get(url2, headers=headers)
+    w1 = BeautifulSoup(r1.text, 'html')
     tr = w1.find_all(
         class_='Ta(c) Py(6px) Bxz(bb) BdB Bdc($seperatorColor) Miw(120px) Miw(100px)--pnclg Bgc($lv1BgColor) fi-row:h_Bgc($hoverBgColor) D(tbc)')[
         0].text
