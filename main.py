@@ -5,7 +5,7 @@ import numpy as np
 import plotly.express as px
 import streamlit as st
 st.title("Stock Analysis")
-fd=pd.read_csv('constituents.csv')
+fd=pd.read_csv('symbols-x.csv')
 Fd=pd.read_csv('NSE Symbols.csv')
 f=fd['Symbol'].unique()
 #Mt(15px) Lh(1.6)
