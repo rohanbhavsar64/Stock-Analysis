@@ -6,7 +6,6 @@ import plotly.express as px
 import streamlit as st
 st.title("Stock Analysis")
 fd=pd.read_csv('constituents.csv')
-Fd=pd.read_csv('NSE Symbols.csv')
 f=fd['Symbol'].unique()
 #Mt(15px) Lh(1.6)
 ticker=st.selectbox("Company",f)
@@ -68,9 +67,6 @@ if h=='Analysis':
             st.write(fig)
 
 elif h=='Profile':
-    #st.subheader(ticker)
-    #st.write(u)
-   # st.write(z)
     url1 = f'https://finance.yahoo.com/quote/{ticker}/profile'
     res = requests.get(url1, headers=headers)
     w = BeautifulSoup(res.text, 'html')
