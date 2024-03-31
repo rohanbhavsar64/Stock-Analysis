@@ -65,7 +65,20 @@ if h=='Analysis':
             fig = px.bar(df, x=df.index, y='Close', color_discrete_sequence=["#4A7230"],title='Closing Price  vs Date')
             fig.update_yaxes(showgrid=False)
             st.write(fig)
-
+    url3 = f'https://finance.yahoo.com/quote/{ticker}/analysis'
+    r2 = requests.get(url3, headers=headers)
+    w2 = BeautifulSoup(r2.text, 'html')
+    f1 = w2.find_all(class_='Ta(end) Py(10px)')[0].text
+    f2 = w2.find_all(class_='Ta(end) Py(10px)')[4].text
+    f3 = w2.find_all(class_='Ta(end) Py(10px)')[8].text
+    f4 = w2.find_all(class_='Ta(end) Py(10px)')[12].text
+    f5 = w2.find_all(class_='Ta(end) Py(10px)')[16].text
+    f6 = w2.find_all(class_='Ta(end) Py(10px)')[20].text
+    data45 = [[f1, 'Current Qtr.'], [f2, 'Next Qtr.'], [f3, 'Current Year'], [f4, 'Next Year'],
+              [f5, 'Next 5 Years (per annum)'], [f6, 'Past 5 Years (per annum)']]
+    df27 = pd.DataFrame(data45, columns=['Growth Est. in %', 'Time'])
+    fig27 = px.line(df27, x='Time', y='Growth Est. in %', color_discrete_sequence=['purple'],title='Growth Est. Predication')
+    st.write(fig27)
 elif h=='Profile':
     url1 = f'https://finance.yahoo.com/quote/{ticker}/profile'
     res = requests.get(url1, headers=headers)
@@ -136,8 +149,7 @@ else:
     r1 = requests.get(url2, headers=headers)
     w1 = BeautifulSoup(r1.text, 'html')
     tr = w1.find_all(
-        class_='Ta(c) Py(6px) Bxz(bb) BdB Bdc($seperatorColor) Miw(120px) Miw(100px)--pnclg Bgc($lv1BgColor) fi-row:h_Bgc($hoverBgColor) D(tbc)')[
-        0].text
+        class_='Ta(c) Py(6px) Bxz(bb) BdB Bdc($seperatorColor) Miw(120px) Miw(100px)--pnclg Bgc($lv1BgColor) fi-row:h_Bgc($hoverBgColor) D(tbc)')[0].text
     tr2023 = w1.find_all(
         class_='Ta(c) Py(6px) Bxz(bb) BdB Bdc($seperatorColor) Miw(120px) Miw(100px)--pnclg Bgc($lv1BgColor) fi-row:h_Bgc($hoverBgColor) D(tbc)')[
         1].text
