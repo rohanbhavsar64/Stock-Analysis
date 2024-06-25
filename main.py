@@ -54,7 +54,7 @@ if h=='Analysis':
 
 # Display the chart using Streamlit
     st.plotly_chart(fig)
-        else:
+ else:
             fig = px.area(df, x=df.index,y='Close', color_discrete_sequence=["#4A7230"],title='Closing Price vs Date')
             fig.update_yaxes(showgrid=False)
             st.write(fig)
