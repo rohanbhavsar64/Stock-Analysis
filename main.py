@@ -40,9 +40,20 @@ if h=='Analysis':
         g=st.radio('Chart- Type',q,horizontal=True)
     if g=='Area':
         if df['Close'][-1]<df['Close'][0]:
-            fig=px.area(df,x=df.index,y='Close',color_discrete_sequence=["#9E4033"],title='Closing Price  vs Date')
-            fig.update_yaxes(showgrid=False)
-            st.write(fig)
+            fig = go.Figure(data=[go.Candlestick(x=df['Date'],
+                                     open=df['Open'],
+                                     high=df['High'],
+                                     low=df['Low'],
+                                     close=df['Close'])])
+
+# Update layout
+    fig.update_layout(title='Candlestick Chart - Closing Price vs Date',
+                  yaxis_title='Price',
+                  xaxis_title='Date',
+                  xaxis_rangeslider_visible=False)
+
+# Display the chart using Streamlit
+    st.plotly_chart(fig)
         else:
             fig = px.area(df, x=df.index,y='Close', color_discrete_sequence=["#4A7230"],title='Closing Price vs Date')
             fig.update_yaxes(showgrid=False)
