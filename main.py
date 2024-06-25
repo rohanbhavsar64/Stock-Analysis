@@ -30,12 +30,6 @@ if h=='Analysis':
                                      low=df['Low'],
                                      close=df['Close'])])
 
-# Update layout
-    fig.update_layout(title='Candlestick Chart - Closing Price vs Date',
-                  yaxis_title='Price',
-                  xaxis_title='Date',
-                  xaxis_rangeslider_visible=False)
-
 # Display the chart using Streamlit
     st.plotly_chart(fig)
     
