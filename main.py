@@ -7,23 +7,7 @@ import streamlit as st
 st.title("Stock Analysis")
 fd=pd.read_csv('constituents.csv')
 f=fd['Symbol'].unique()
-#Mt(15px) Lh(1.6)
 ticker=st.selectbox("Company",f)
-url=f"https://finance.yahoo.com/quote/{ticker}?.tsrc=fin-srch"
-df=pd.DataFrame()
-#<fin-streamer class="Fw(500) Pstart(8px) Fz(24px)" data-symbol="INFY" data-test="qsp-price-change" data-field="regularMarketChange" data-trend="txt" data-pricehint="2" value="-0.6700001" active=""><span class="e3b14781 ee3e99dd dde7f18a"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">-0.64</font></font></span></fin-streamer>
-headers={'User-Agent':'Mo BeautifulSoupzilla/5.0 (Windows NT 6.3; Win 64 ; x64) Apple WeKit /537.36(KHTML , like Gecko) Chrome/80.0.3987.162 Safari/537.36'}
-r=requests.get(url,headers=headers)
-web=BeautifulSoup(r.text,'html')
-st.write(web.find(class_='D(ib) Fz(18px)').text)
-
-#<div class="D(ib) Mt(-5px) Maw(38%)--tab768 Maw(38%) Mend(10px) Ov(h) smartphone_Maw(85%) smartphone_Mend(0px)"><div class="D(ib) "><h1 class="D(ib) Fz(18px)">Infosys Limited (INFY)</h1></div><div class="C($tertiaryColor) Fz(12px)"><span>NYSE - Nasdaq Real Time Price. Currency in USD</span></div></div>
-c=web.find(class_='Fw(b) Fz(36px) Mb(-4px) D(ib)').text
-st.subheader('Current Price : '+c+' $')
-a=web.find_all(class_='Fw(500) Pstart(8px) Fz(24px)')[0].text
-b=web.find_all(class_='Fw(500) Pstart(8px) Fz(24px)')[1].text
-s=a+" "+b
-st.write(s)
 import yfinance as yf
 # Get the data for the stock AAPL
 j=['Analysis','Profile','Statistics']
