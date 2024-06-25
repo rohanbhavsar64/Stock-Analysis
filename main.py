@@ -32,7 +32,7 @@ if h=='Analysis':
                                      close=df['Close'])])
 
 # Display the chart using Streamlit
-    st.plotly_chart(fig)
+    st.write(fig)
     
     url3 = f'https://finance.yahoo.com/quote/{ticker}/analysis'
     r2 = requests.get(url3, headers=headers)
