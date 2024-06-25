@@ -54,28 +54,7 @@ if h=='Analysis':
 
 # Display the chart using Streamlit
     st.plotly_chart(fig)
- else:
-            fig = px.area(df, x=df.index,y='Close', color_discrete_sequence=["#4A7230"],title='Closing Price vs Date')
-            fig.update_yaxes(showgrid=False)
-            st.write(fig)
-    elif g=='Line':
-        if df['Close'][-1] < df['Close'][0]:
-            fig = px.line(df, x=df.index, y='Close', color_discrete_sequence=["#9E4033"],title='Close vs Date')
-            fig.update_yaxes(showgrid=False)
-            st.write(fig)
-        else:
-            fig = px.line(df, x=df.index, y='Close', color_discrete_sequence=["#4A7230"],title='Closing Price  vs Date')
-            fig.update_yaxes(showgrid=False)
-            st.write(fig)
-    else:
-        if df['Close'][-1] < df['Close'][0]:
-            fig = px.bar(df, x=df.index, y='Close', color_discrete_sequence=["#9E4033"],title='Closing Price vs Date')
-            fig.update_yaxes(showgrid=False)
-            st.write(fig)
-        else:
-            fig = px.bar(df, x=df.index, y='Close', color_discrete_sequence=["#4A7230"],title='Closing Price  vs Date')
-            fig.update_yaxes(showgrid=False)
-            st.write(fig)
+    
     url3 = f'https://finance.yahoo.com/quote/{ticker}/analysis'
     r2 = requests.get(url3, headers=headers)
     w2 = BeautifulSoup(r2.text, 'html')
